@@ -15,6 +15,7 @@ export default function QuerySection() {
     const query = event.target.elements.query.value;
     setIsSubmit(true);
     setIsLoad(false);
+    setError(null);
 
     if (/^\s*$/.test(query)) {
       setData([]);
@@ -27,6 +28,7 @@ export default function QuerySection() {
         `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${query}&gsrlimit=10&prop=extracts&exchars=100&exintro=1&explaintext=1&exlimit=max&format=json&origin=*`
       );
       const data = await response.json();
+      if (!data.query?.pages) throw new Error("No data found");
       const arrayPages = Object.values(data.query.pages);
       setData(arrayPages);
       setIsLoad(true);
